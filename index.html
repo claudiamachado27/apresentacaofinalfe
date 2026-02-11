@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Projeto Equipa Vértice</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/favicon-vertice.ico">
+
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts: Inter & Outfit -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --primary-color: #00D1FF;
+            /* Electric Cyan */
+            --primary-glow: rgba(0, 209, 255, 0.15);
+            --bg-dark: #020617;
+            /* Deepest Navy (Safe contrast) */
+            --surface-dark: #0F172A;
+            /* Slate 900 */
+            --border-color: rgba(148, 163, 184, 0.1);
+            --text-main: #F1F5F9;
+            /* Slate 100 */
+            --text-dim: #94A3B8;
+            /* Slate 400 */
+            --accent-green: #10B981;
+            --accent-orange: #F59E0B;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        /* Sidebar Styling */
+        aside {
+            width: 288px;
+            border-right: 1px solid var(--border-color);
+            background-color: var(--surface-dark);
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2.5rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Nav Link Styling */
+        .nav-link-custom {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: 500;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link-custom:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-link-custom.active {
+            color: white !important;
+            background: rgba(0, 209, 255, 0.08);
+            border: 1px solid rgba(0, 209, 255, 0.2);
+        }
+
+        .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            box-shadow: 0 0 12px var(--primary-color);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            overflow: hidden;
+            background-color: var(--bg-dark);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .glow-bg {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Horizontal Scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 2.5rem;
+            padding: 1rem 0 3rem 0;
+            scroll-behavior: smooth;
+        }
+
+        .snap-center {
+            scroll-snap-align: center;
+            min-width: 100%;
+        }
+
+        /* Cards */
+        .team-card {
+            position: relative;
+            border-radius: 4px;
+            /* Sharp geometry */
+            height: 30rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .team-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+        }
+
+        .zoomable-img {
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        }
+
+        .zoomable-img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 209, 255, 0.3) !important;
+        }
+
+        #imageLightboxModal {
+            background-color: rgba(0, 0, 0, 0.98) !important;
+        }
+
+        #imageLightboxModal .btn-close-custom {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1060;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            padding: 1rem;
+            color: white !important;
+            opacity: 1;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #imageLightboxModal .btn-close-custom:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        #imageLightboxModal .modal-content {
+            box-shadow: none !important;
+        }
+
+        .team-card img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            filter: grayscale(20%);
+        }
+
+        .team-card:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #020617 0%, rgba(2, 6, 23, 0.4) 50%, transparent 100%);
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(4px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .card-badge-stacks {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .github-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            background: var(--primary-color);
+            color: #020617;
+            transition: all 0.3s ease;
+        }
+
+        /* Scroll Arrows */
+        .scroll-arrow-container-custom {
+            position: absolute;
+            top: -4.5rem;
+            right: 0;
+            z-index: 20;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .arrow-btn {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 0.6rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .arrow-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color) !important;
+            background: rgba(0, 209, 255, 0.05);
+        }
+
+        .arrow-btn svg {
+            color: var(--text-dim);
+            width: 20px;
+            height: 20px;
+        }
+
+        .arrow-btn:hover svg {
+            color: var(--primary-color);
+        }
+
+        /* Tab Transitions */
+        @keyframes tabReveal {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-tab {
+            animation: tabReveal 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .hidden-tab {
+            display: none !important;
+        }
+
+        /* Utility */
+        .section-divider {
+            height: 1px;
+            background: linear-gradient(to right, var(--border-color), transparent);
+            margin-bottom: 3.5rem;
+        }
+
+        .text-primary-custom {
+            color: var(--primary-color);
+        }
+
+        .max-w-7xl {
+            max-width: 1280px;
+        }
+
+        /* Methodology Cards */
+        .method-card {
+            background: var(--surface-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+            height: 16rem;
+            /* fixed height for alignment */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .method-card:hover {
+            border-color: var(--primary-color);
+            background: rgba(255, 255, 255, 0.02);
+            transform: scale(1.02);
+        }
+
+        .method-card .method-img {
+            width: 40%;
+            border-right: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .method-card .method-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .method-card:hover .method-img img {
+            opacity: 1;
+        }
+
+        .method-card .method-body {
+            width: 60%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .method-card h4 {
+            font-size: 1.15rem;
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+
+        .method-card p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        /* Timeline Methodology */
+        .methodology-timeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 1rem 0.5rem;
+            background: var(--surface-dark);
+            border: 1px solid var(--border-color);
+            position: relative;
+            clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%, 10% 50%);
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timeline-header:first-child {
+            clip-path: polygon(0% 0%, 90% 0%, 100% 50%, 90% 100%, 0% 100%);
+        }
+
+        .timeline-header:last-child {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 10% 50%);
+        }
+
+        .timeline-header.active {
+            background: rgba(0, 209, 255, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .timeline-header i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .timeline-header span {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
+        }
+
+        .timeline-column {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            font-size: 1.15rem;
+            min-height: 280px;
+            display: none;
+            width: 100%;
+            border-radius: 8px;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .timeline-column.active {
+            display: flex;
+            animation: tabReveal 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .column-content {
+            flex: 1.2;
+        }
+
+        .column-image {
+            flex: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 30px var(--primary-glow);
+            transition: transform 0.3s ease;
+        }
+
+        .column-image:hover {
+            transform: scale(1.02);
+            border-color: var(--primary-color);
+        }
+
+        .column-image img {
+            width: 100%;
+            height: auto;
+            max-height: 350px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .timeline-column {
+                flex-direction: column;
+                padding: 1.5rem;
+            }
+
+            .column-image {
+                width: 100%;
+                order: -1;
+                /* Image first on mobile */
+            }
+        }
+
+        .timeline-column ul {
+            padding-left: 1.25rem;
+            margin: 0;
+            list-style-type: none;
+        }
+
+        .timeline-column li {
+            position: relative;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .timeline-column li::before {
+            content: "•";
+            color: var(--primary-color);
+            position: absolute;
+            left: -1rem;
+            font-weight: bold;
+        }
+
+        .timeline-footer-bars {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .stage-bar {
+            padding: 0.75rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            background: var(--surface-dark);
+            border: 1px solid var(--border-color);
+            clip-path: polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%, 5% 50%);
+        }
+
+        .stage-bar.analysis {
+            grid-column: 1 / span 2;
+            background: rgba(0, 209, 255, 0.05);
+            border-color: rgba(0, 209, 255, 0.3);
+        }
+
+        .stage-bar.implementation {
+            grid-column: 3 / span 3;
+            background: rgba(16, 185, 129, 0.05);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .stage-bar.management {
+            grid-column: 1 / span 5;
+            margin-top: 0.5rem;
+            background: rgba(245, 158, 11, 0.05);
+            border-color: rgba(245, 158, 11, 0.3);
+            clip-path: polygon(0% 0%, 98% 0%, 100% 50%, 98% 100%, 0% 100%, 2% 50%);
+        }
+
+        @media (max-width: 992px) {
+
+            .methodology-timeline,
+            .timeline-footer-bars {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-header,
+            .timeline-column,
+            .stage-bar {
+                clip-path: none !important;
+                margin-bottom: 0.5rem;
+                min-height: auto;
+            }
+
+            .stage-bar {
+                grid-column: 1 / span 1 !important;
+            }
+        }
+
+        /* Ticket Offcanvas Styling */
+        .offcanvas-custom {
+            background-color: var(--surface-dark) !important;
+            border-left: 1px solid var(--border-color) !important;
+            color: var(--text-main) !important;
+            width: 450px !important;
+        }
+
+        .offcanvas-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem;
+        }
+
+        .offcanvas-body {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ticket-container {
+            width: 100%;
+            max-width: 400px;
+            transition: transform 0.3s ease;
+        }
+
+        .ticket-container:hover {
+            transform: scale(1.02);
+        }
+
+        .ticket-img {
+            width: 50%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .footer-link {
+            transition: color 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .footer-link:hover {
+            color: var(--primary-color) !important;
+            opacity: 1 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex h-100 w-100">
+        <!-- SIDEBAR -->
+        <aside>
+            <div>
+                <div class="mb-5 text-center text-md-start px-3">
+                    <img src="images/logo-vértice.png" class="img-fluid rounded mb-2"
+                        style="width: 180px; object-fit: contain; filter: brightness(1.1);" alt="Logo Vértice">
+                </div>
+
+                <nav class="d-flex flex-column gap-1">
+                    <!-- Contexto -->
+                    <a id="link-home" onclick="switchTab('home')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>Contexto</span>
+                        </div>
+                        <div id="dot-home" class="dot d-none"></div>
+                    </a>
+
+                    <!-- Stacks Utilizadas -->
+                    <a id="link-work" onclick="switchTab('work')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                <polyline points="2 17 12 22 22 17"></polyline>
+                                <polyline points="2 12 12 17 22 12"></polyline>
+                            </svg>
+                            <span>Stacks Utilizadas</span>
+                        </div>
+                        <div id="dot-work" class="dot d-none"></div>
+                    </a>
+
+                    <!-- Metodologia -->
+                    <a id="link-about" onclick="switchTab('about')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <line x1="6" y1="3" x2="6" y2="15"></line>
+                                <circle cx="18" cy="6" r="3"></circle>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <path d="M18 9a9 9 0 0 1-9 9"></path>
+                            </svg>
+                            <span>Metodologia</span>
+                        </div>
+                        <div id="dot-about" class="dot d-none"></div>
+                    </a>
+
+                    <!-- A APP -->
+                    <a id="link-contact" onclick="switchTab('contact')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                            <span>A App</span>
+                        </div>
+                        <div id="dot-contact" class="dot d-none"></div>
+                    </a>
+
+                    <!-- Desafios -->
+                    <a id="link-challenges" onclick="switchTab('challenges')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                                </path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span>Desafios</span>
+                        </div>
+                        <div id="dot-challenges" class="dot d-none"></div>
+                    </a>
+
+                    <!-- Aprendizagem -->
+                    <a id="link-learning" onclick="switchTab('learning')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                <polyline points="17 6 23 6 23 12"></polyline>
+                            </svg>
+                            <span>Aprendizagens</span>
+                        </div>
+                        <div id="dot-learning" class="dot d-none"></div>
+                    </a>
+
+                    <!-- Melhorias Futuras -->
+                    <a id="link-future" onclick="switchTab('future')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <polygon points="13 19 22 12 13 5 13 19"></polygon>
+                                <polygon points="2 19 11 12 2 5 2 19"></polygon>
+                            </svg>
+                            <span>Melhorias Futuras</span>
+                        </div>
+                        <div id="dot-future" class="dot d-none"></div>
+                    </a>
+
+                    <!-- Perguntas -->
+                    <a id="link-perguntas" onclick="switchTab('perguntas')" class="nav-link-custom">
+                        <div class="d-flex align-items-center gap-3">
+                            <svg fill="none" height="18" stroke="currentColor" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="18"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                            <span>Perguntas</span>
+                        </div>
+                        <div id="dot-perguntas" class="dot d-none"></div>
+                    </a>
+
+                    <!-- Oferta Especial -->
+                    <!-- <a id="link-ticket" data-bs-toggle="offcanvas" href="#offcanvasTicket" role="button"
+                        aria-controls="offcanvasTicket" class="nav-link-custom">
+
+                    </a> -->
+                </nav>
+            </div>
+
+            <div class="pt-4 px-3">
+                <p class="small text-dim opacity-50 mb-0">
+                    <a href="#offcanvasTicket" data-bs-toggle="offcanvas" class="footer-link">© 2026 Equipa Vértice</a>
+                </p>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main>
+            <div class="glow-bg"></div>
+
+            <div class="container-fluid px-4 px-md-5 py-5 max-w-7xl mx-auto flex-grow-1 d-flex flex-column"
+                style="max-width: 1280px;">
+
+                <!-- START CONTENT -->
+                <div id="content-start"
+                    class="animate-tab flex-grow-1 d-flex align-items-center justify-content-center">
+                    <div class="text-center">
+                        <img src="images/logo-vértice.png" class="img-fluid mb-0"
+                            style="max-width: 600px; filter: brightness(1.1); animation: tabReveal 1s ease-out;"
+                            alt="Logo Vértice Large">
+                        <h1 class="text-center fw-bold display-4"
+                            style="margin-top: -5rem; animation: tabReveal 1s ease-out">
+                            Apresenta...
+                        </h1>
+                    </div>
+
+                </div>
+
+                <!-- HOME CONTENT -->
+                <div id="content-home" class="hidden-tab flex-grow-1 d-flex flex-column">
+                    <div class="mb-2">
+                        <h2 class="display-5 fw-bold mb-2 text-white">Contexto</h2>
+                        <p class="fs-5 text-dim fw-light">Visão Geral do Projeto</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <!-- Horizontal Scroll Container -->
+                    <div class="position-relative mt-auto">
+                        <!-- Scroll Arrows -->
+                        <div class="scroll-arrow-container-custom">
+                            <button id="scroll-left-btn"
+                                onclick="document.getElementById('horizontal-scroll').scrollBy({left: -document.getElementById('horizontal-scroll').clientWidth, behavior: 'smooth'})"
+                                class="arrow-btn d-none">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                    width="24">
+                                    <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            <button id="scroll-right-btn"
+                                onclick="document.getElementById('horizontal-scroll').scrollBy({left: document.getElementById('horizontal-scroll').clientWidth, behavior: 'smooth'})"
+                                class="arrow-btn">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                    width="24">
+                                    <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div id="horizontal-scroll" class="no-scrollbar">
+
+                            <!-- Slide 1: Team -->
+                            <div class="snap-center">
+                                <h3 class="fs-2 fw-bold text-white mb-5">A Equipa</h3>
+                                <div class="row g-4">
+
+                                    <!-- Card 1 -->
+                                    <div class="col-md-4">
+                                        <div class="team-card">
+                                            <img src="images/anthoni.png" alt="Anthony Mendonza">
+                                            <div class="card-overlay"></div>
+                                            <div class="card-badge">Open to Work</div>
+                                            <div class="card-content">
+                                                <div class="github-icon">
+                                                    <i class="bi bi-github"></i>
+                                                </div>
+                                                <h3 class="h4 fw-bold text-white mb-0">Anthony Mendoza</h3>
+                                                <p class="text-dim mb-0">Front-end Developer</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Card 2 -->
+                                    <div class="col-md-4">
+                                        <div class="team-card">
+                                            <img src="images/claudia.png" alt="Claudia Machado">
+                                            <div class="card-overlay"></div>
+                                            <div class="card-badge">Open to Work</div>
+                                            <div class="card-content">
+                                                <div class="github-icon">
+                                                    <i class="bi bi-github"></i>
+                                                </div>
+                                                <h3 class="h4 fw-bold text-white mb-0">Claudia Machado</h3>
+                                                <p class="text-dim mb-0">Front-end Developer</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Card 3 -->
+                                    <div class="col-md-4">
+                                        <div class="team-card">
+                                            <img src="images/tais.jpg" alt="Taís Pestana">
+                                            <div class="card-overlay"></div>
+                                            <div class="card-badge">Open to Work</div>
+                                            <div class="card-content">
+                                                <div class="github-icon">
+                                                    <i class="bi bi-github"></i>
+                                                </div>
+                                                <h3 class="h4 fw-bold text-white mb-0">Taís Pestana</h3>
+                                                <p class="text-dim mb-0">Front-end Developer</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <!-- Slide 2: Client -->
+                            <div class="snap-center">
+                                <h3 class="fs-2 fw-bold text-white mb-5">O Cliente</h3>
+                                <div
+                                    class="card bg-dark border border-secondary border-opacity-50 bg-opacity-10 p-5 rounded-4 position-relative overflow-hidden group">
+                                    <div class="position-absolute top-0 end-0 bg-primary opacity-10 rounded-circle"
+                                        style="width: 200px; height: 200px; margin-right: -100px; margin-top: -100px; filter: blur(90px);">
+                                    </div>
+                                    <div class="position-relative z-1">
+                                        <div
+                                            class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                                            <div>
+                                                <h4 class="h2 fw-bold text-white mb-1">Templo de Gaya</h4>
+                                                <p
+                                                    class="text-primary-custom fs-5 fw-medium d-flex align-items-center gap-2 mb-0">
+                                                    <i class="bi bi-geo-alt"></i>
+                                                    Aveiro
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="px-3 py-2 rounded-pill bg-secondary bg-opacity-10 border border-secondary border-opacity-25">
+                                                <span class="text-white-70 me-2">Stakeholder:</span>
+                                                <span class="fw-semibold text-white">Danyelle Gomes</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="p-4 bg-black bg-opacity-25 rounded-3 border border-secondary border-opacity-50">
+                                            <h5 class="small fw-bold text-white-70 mb-3 fs-5">O Cenário</h5>
+                                            <p class="fs-4 text-white-70 fw-light mb-0">
+                                                Uma clínica de estética que preza pela <span
+                                                    class="text-primary-custom fw-medium">excelência no
+                                                    atendimento</span>, mas enfrentava desafios operacionais e
+                                                administrativos.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Slide 3: Project -->
+                            <div class="snap-center">
+                                <h3 class="fs-2 fw-bold text-white mb-5">O Projeto</h3>
+                                <div class="position-relative ps-4 mb-5 border-start border-4 border-primary">
+                                    <p class="fs-2 fw-light text-white fst-italic">
+                                        "O nosso objetivo não foi apenas criar uma App, mas sim um <span
+                                            class="fw-semibold text-primary-custom">Ecossistema Digital de Gestão
+                                            Operacional</span>."
+                                    </p>
+                                </div>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="h-100 p-5 rounded-1 border border-secondary border-opacity-10 hover-shadow transition-all"
+                                            style="background: var(--surface-dark);">
+                                            <div class="github-icon mb-4">
+                                                <i class="bi bi-crosshair" style="font-size: 1.25rem;"></i>
+                                            </div>
+                                            <h4 class="h3 fw-bold text-white mb-3">Foco Principal</h4>
+                                            <p class="text-dim fs-5">Automação de processos e inteligência de dados
+                                                para otimizar a eficiência da clínica.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="h-100 p-5 rounded-1 border border-secondary border-opacity-10 hover-shadow transition-all"
+                                            style="background: var(--surface-dark);">
+                                            <div class="github-icon mb-4">
+                                                <i class="bi bi-palette" style="font-size: 1.25rem;"></i>
+                                            </div>
+                                            <h4 class="h3 fw-bold text-white mb-3">Identidade Visual</h4>
+                                            <p class="text-dim fs-5">Uma interface "Clean & Professional",
+                                                desenhada para transmitir: <span
+                                                    class="d-block mt-2 fw-medium text-white">Higiene, Bem-estar e
+                                                    Profissionalismo Absoluto.</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STACKS CONTENT -->
+                <div id="content-work" class="animate-tab flex-grow-1 d-flex flex-column hidden-tab">
+                    <div class="mb-2">
+                        <h2 class="display-5 fw-bold mb-2 text-white">Stacks Utilizadas</h2>
+                        <p class="fs-5 text-dim fw-light">As tecnologias utilizadas para desenvolver a App</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <div class="mt-3 pt-0">
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="card h-100 bg-surface-dark border-0 hover-shadow transition-all overflow-hidden"
+                                    style="background: var(--surface-dark);">
+                                    <div class="d-flex align-items-center justify-content-center py-5"
+                                        style="background: rgba(255,255,255,0.02)">
+                                        <i class="bi bi-window-sidebar"
+                                            style="font-size: 5rem; color: var(--primary-color);"></i>
+                                    </div>
+                                    <div class="card-body p-4 d-flex flex-column">
+                                        <h3 class="h4 fw-bold text-white mb-2">Frontend</h3>
+                                        <p class="text-dim fs-5 mb-4">Design moderno focado em usabilidade, garantindo
+                                            rapidez e fluidez total.</p>
+                                        <div class="d-flex flex-wrap gap-2 mt-auto">
+                                            <span class="card-badge-stacks">React</span>
+                                            <span class="card-badge-stacks">Inertia.js</span>
+                                            <span class="card-badge-stacks">Vite</span>
+                                            <span class="card-badge-stacks">Bootstrap 5</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card h-100 bg-surface-dark border-0 hover-shadow transition-all overflow-hidden"
+                                    style="background: var(--surface-dark);">
+                                    <div class="d-flex align-items-center justify-content-center py-5"
+                                        style="background: rgba(255,255,255,0.02)">
+                                        <i class="bi bi-server"
+                                            style="font-size: 5rem; color: var(--primary-color);"></i>
+                                    </div>
+                                    <div class="card-body p-4 d-flex flex-column">
+                                        <h3 class="h4 fw-bold text-white mb-2">Backend</h3>
+                                        <p class="text-dim fs-5 mb-4">Arquitetura robusta e escalável, processando
+                                            regras complexas com segurança.</p>
+                                        <div class="d-flex flex-wrap gap-2 mt-auto">
+                                            <span class="card-badge-stacks">Laravel</span>
+                                            <span class="card-badge-stacks">PHP</span>
+                                            <span class="card-badge-stacks">Breeze</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card h-100 bg-surface-dark border-0 hover-shadow transition-all overflow-hidden"
+                                    style="background: var(--surface-dark);">
+                                    <div class="d-flex align-items-center justify-content-center py-5"
+                                        style="background: rgba(255,255,255,0.02)">
+                                        <i class="bi bi-database"
+                                            style="font-size: 5rem; color: var(--primary-color);"></i>
+                                    </div>
+                                    <div class="card-body p-4 d-flex flex-column">
+                                        <h3 class="h4 fw-bold text-white mb-2">Base de Dados</h3>
+                                        <p class="text-dim fs-5 mb-4">Estruturação inteligente, garantindo a integridade
+                                            suportando grandes volumes.</p>
+                                        <div class="d-flex flex-wrap gap-2 mt-auto">
+                                            <span class="card-badge-stacks">MySQL</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Metodologia -->
+                <div id="content-about" class="animate-tab flex-grow-1 d-flex flex-column hidden-tab">
+                    <div class="mb-1">
+                        <h2 class="display-5 fw-bold mb-2 text-white">Metodologia</h2>
+                        <p class="fs-5 text-dim fw-light">Fluxo de Trabalho e Ciclo de Vida do Projeto</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <div class="flex-grow-1 d-flex flex-column justify-content-start">
+                        <!-- Top Stages (Now on Top) -->
+                        <div class="timeline-footer-bars mb-0">
+                            <div class="stage-bar analysis">Fase de Análise</div>
+                            <div class="stage-bar implementation">Fase de Implementação</div>
+                        </div>
+
+                        <!-- Top Navigation / Headers -->
+                        <div class="methodology-timeline mt-0">
+                            <div class="timeline-header" onclick="switchMethodology(0)">
+                                <i class="bi bi-rocket-takeoff"></i>
+                                <span>Descoberta</span>
+                            </div>
+                            <div class="timeline-header" onclick="switchMethodology(1)">
+                                <i class="bi bi-pencil-square"></i>
+                                <span>Design</span>
+                            </div>
+                            <div class="timeline-header" onclick="switchMethodology(2)">
+                                <i class="bi bi-gear-wide-connected"></i>
+                                <span>Desenvolvimento</span>
+                            </div>
+                            <div class="timeline-header" onclick="switchMethodology(3)">
+                                <i class="bi bi-display"></i>
+                                <span>Testes</span>
+                            </div>
+                            <div class="timeline-header" onclick="switchMethodology(4)">
+                                <i class="bi bi-broadcast-pin"></i>
+                                <span>Lançamento</span>
+                            </div>
+                        </div>
+
+                        <!-- Content Area -->
+                        <div class="mt-1">
+                            <div id="method-col-0" class="timeline-column">
+                                <div class="column-content">
+                                    <h4 class="h5 text-primary-custom mb-3">Fase de Descoberta</h4>
+                                    <ul>
+                                        <li>Planeamento de Sprints (Notion)</li>
+                                        <li>Levantamento de Requisitos</li>
+                                        <li>Pesquisa de Mercado</li>
+                                        <li>Definição de Escopo</li>
+                                        <li>Reunião com Cliente</li>
+                                    </ul>
+                                </div>
+                                <div class="column-image">
+                                    <img src="images/discovery_phase.png" alt="Descoberta">
+                                </div>
+                            </div>
+                            <div id="method-col-1" class="timeline-column">
+                                <div class="column-content">
+                                    <h4 class="h5 text-primary-custom mb-3">Fase de Design</h4>
+                                    <ul>
+                                        <li>Mapa da Jornada do Usuário</li>
+                                        <li>UX Persona (Dona da Clínica)</li>
+                                        <li>Paleta de Cores e Tipografia</li>
+                                        <li>Prototipagem no Figma</li>
+                                        <li>Reunião de Aprovoção pela Cliente</li>
+                                        <li>Revisão de Design</li>
+                                    </ul>
+                                </div>
+                                <div class="column-image">
+                                    <img src="images/design_phase.png" alt="Design">
+                                </div>
+                            </div>
+                            <div id="method-col-2" class="timeline-column">
+                                <div class="column-content">
+                                    <h4 class="h5 text-primary-custom mb-3">Fase de Desenvolvimento</h4>
+                                    <ul>
+                                        <li>Linguagem de modelagem unificada (UML)</li>
+                                        <li>Modelagem de Dados (DER)</li>
+                                        <li>Setup de Base de Dados</li>
+                                        <li>Desenvolvimento Laravel (Backend)</li>
+                                        <li>Desenvolvimento React (Frontend)</li>
+                                    </ul>
+                                </div>
+                                <div class="column-image">
+                                    <img src="images/development_phase.png" alt="Desenvolvimento">
+                                </div>
+                            </div>
+                            <div id="method-col-3" class="timeline-column">
+                                <div class="column-content">
+                                    <h4 class="h5 text-primary-custom mb-3">Fase de Testes</h4>
+                                    <ul>
+                                        <li>QA & Testes de Integração (GitHub)</li>
+                                        <li>Revisão & Auditoria do Código</li>
+                                        <li>Criação de Documentação</li>
+                                        <li>Sessão de Treinamento do Utilizador</li>
+                                        <li>Aprovação Final para Lançamento</li>
+                                    </ul>
+                                </div>
+                                <div class="column-image">
+                                    <img src="images/testing_phase.png" alt="Testes">
+                                </div>
+                            </div>
+                            <div id="method-col-4" class="timeline-column">
+                                <div class="column-content">
+                                    <h4 class="h5 text-primary-custom mb-3">Fase de Lançamento</h4>
+                                    <ul>
+                                        <li>Plano de Implementação Detalhado</li>
+                                        <li>Migração de Informações</li>
+                                        <li>Deploy Final (Hostinger)</li>
+                                    </ul>
+                                </div>
+                                <div class="column-image">
+                                    <img src="images/launch_phase.png" alt="Lançamento">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Global Bar -->
+                        <div class="timeline-footer-bars">
+                            <div class="stage-bar management">Gestão do Projeto</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- A APP -->
+                <div id="content-contact" class="animate-tab flex-grow-1 d-flex flex-column hidden-tab">
+                    <div class="mb-0">
+                        <h2 class="display-5 fw-bold mb-2 text-white">A App</h2>
+                        <p class="fs-5 text-dim fw-light">Desenvolvimento e funcionalidades principais</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <!-- Horizontal Scroll Container -->
+                    <div class="position-relative mt-0">
+                        <!-- Scroll Arrows -->
+                        <div class="scroll-arrow-container-custom">
+                            <button id="app-scroll-left-btn"
+                                onclick="document.getElementById('app-scroll').scrollBy({left: -document.getElementById('app-scroll').clientWidth, behavior: 'smooth'})"
+                                class="arrow-btn d-none">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                    width="24">
+                                    <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            <button id="app-scroll-right-btn"
+                                onclick="document.getElementById('app-scroll').scrollBy({left: document.getElementById('app-scroll').clientWidth, behavior: 'smooth'})"
+                                class="arrow-btn">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                    width="24">
+                                    <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div id="app-scroll" class="no-scrollbar">
+                            <!-- Page 1: Showcase Principal -->
+                            <div class="snap-center">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-8">
+                                        <div
+                                            class="pt-1 pb-5 px-5 border border-dashed border-secondary border-opacity-25 rounded-4 text-center">
+                                            <!-- <i class="bi bi-phone text-dim opacity-25 mb-3"
+                                                style="font-size: 4rem;"></i> -->
+                                            <h3 class="h4 text-white mt-0 mb-2">Wireframe, Mockup e Protótipo</h3>
+
+                                            <div class="mt-0">
+                                                <img src="images/design.png" alt="UX/UI Design Showcase"
+                                                    onclick="openImageModal(this.src)"
+                                                    class="img-fluid rounded-4 shadow-lg border border-secondary border-opacity-10 zoomable-img">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Page 2: Desenvolvimento -->
+                            <div class="snap-center">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-9">
+                                        <div
+                                            class="pt-1 pb-5 px-2 border border-dashed border-secondary border-opacity-25 rounded-4 text-center">
+                                            <!-- <i class="bi bi-phone text-dim opacity-25 mb-3"
+                                                style="font-size: 4rem;"></i> -->
+                                            <h3 class="h4 text-white mt-0 mb-2">Showcase da Aplicação</h3>
+                                            <!-- <p class="text-dim fs-5 mb-0">Interface moderna desenhada para máxima
+                                                eficiência.</p> -->
+                                            <div class="mt-0">
+                                                <img src="images/UXUI Design.png" alt="UX/UI App Showcase"
+                                                    onclick="openImageModal(this.src)"
+                                                    class="img-fluid rounded-4 shadow-lg border border-secondary border-opacity-10 zoomable-img">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desafios -->
+                <div id="content-challenges" class="animate-tab flex-grow-1 d-flex flex-column hidden-tab">
+                    <div class="mb-2">
+                        <h2 class="display-5 fw-bold mb-2 text-white">Desafios</h2>
+                        <p class="fs-5 text-dim fw-light">Os obstáculos superados durante o percurso</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <div class="p-4 border border-secondary border-opacity-10 mb-3"
+                        style="background: var(--surface-dark); border-radius: 4px;">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-code-square text-primary-custom me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h3 class="h4 text-white mb-3">Manter a Qualidade do Código</h3>
+                                <p class="text-dim mb-0" style="font-size: 1.2rem; line-height: 1.6;">Um código bem
+                                    estruturado e padronizado ajuda a manter a qualidade do produto, evitando problemas
+                                    de desempenho e facilita a manutenção. Além disso, evita erros e facilita a
+                                    depuração.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 border border-secondary border-opacity-10 mb-3"
+                        style="background: var(--surface-dark); border-radius: 4px;">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-palette-fill text-primary-custom me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h3 class="h4 text-white mb-3">Garantir uma UX de Qualidade</h3>
+                                <p class="text-dim mb-0" style="font-size: 1.2rem; line-height: 1.6;">Um design
+                                    intuitivo
+                                    evita a frustração dos utilizadores e o abandono da
+                                    aplicação. A realização de testes com utilizadores reais facilita a identificação
+                                    desses
+                                    problemas antes do lançamento.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 border border-secondary border-opacity-10"
+                        style="background: var(--surface-dark); border-radius: 4px;">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-people-fill text-primary-custom me-3" style="font-size: 1.5rem;"></i>
+                            <div>
+                                <h3 class="h4 text-white mb-3">Trabalho em Equipa</h3>
+                                <p class="text-dim mb-0" style="font-size: 1.2rem; line-height: 1.6;">Colaborar num
+                                    projeto conjunto foi uma experiência nova para todos os integrantes. A gestão de
+                                    versionamento com Git e GitHub, a resolução de conflitos e a sincronização de
+                                    tarefas exigiram uma adaptação rápida e rigorosa para manter o fluxo de
+                                    desenvolvimento.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Aprendizagem -->
+                <div id="content-learning" class="animate-tab flex-grow-1 d-flex flex-column hidden-tab">
+                    <div class="mb-2">
+                        <h2 class="display-5 fw-bold mb-2 text-white">Aprendizagens</h2>
+                        <p class="fs-5 text-dim fw-light">Conhecimentos adquiridos e competências desenvolvidas</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <!-- Horizontal Scroll Container -->
+                    <div class="position-relative mt-auto">
+                        <!-- Scroll Arrows -->
+                        <div class="scroll-arrow-container-custom">
+                            <button id="learning-scroll-left-btn"
+                                onclick="document.getElementById('learning-scroll').scrollBy({left: -document.getElementById('learning-scroll').clientWidth, behavior: 'smooth'})"
+                                class="arrow-btn d-none">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                    width="24">
+                                    <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            <button id="learning-scroll-right-btn"
+                                onclick="document.getElementById('learning-scroll').scrollBy({left: document.getElementById('learning-scroll').clientWidth, behavior: 'smooth'})"
+                                class="arrow-btn">
+                                <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
+                                    width="24">
+                                    <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <div id="learning-scroll" class="no-scrollbar">
+                            <!-- Page 1: Competências Técnicas -->
+                            <div class="snap-center">
+                                <h3 class="fs-2 fw-bold text-white mb-4">
+                                    <i class="bi bi-code-slash text-primary-custom me-2"></i>
+                                    Competências Técnicas
+                                </h3>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-layers-fill text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Arquitetura Fullstack com Laravel e
+                                                        React</h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Domínio da
+                                                        integração entre um backend robusto (Laravel) e um frontend
+                                                        reativo (React) para sistemas de gestão.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-shield-lock-fill text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Gestão de Autenticação e Segurança
+                                                    </h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Implementação de
+                                                        fluxos seguros de acesso utilizando o Laravel Breeze.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-database-fill text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Modelagem de Dados Clínica</h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Compreensão da
+                                                        estrutura de dados necessária para gerenciar clientes,
+                                                        agendamentos, tratamentos e controle de estoque.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-diagram-3-fill text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Ciclo de Vida de Software (SDLC)</h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Entendimento das
+                                                        fases de um projeto, desde a "Descoberta e Design" até ao
+                                                        "Deploy".</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-kanban-fill text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Metodologias Ágeis</h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Conhecimento
+                                                        prático sobre como dividir um projeto complexo em Sprints
+                                                        funcionais com prazos e responsáveis.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Page 2: Competências Transversais -->
+                            <div class="snap-center">
+                                <h3 class="fs-2 fw-bold text-white mb-4">
+                                    <i class="bi bi-people-fill text-primary-custom me-2"></i>
+                                    Competências Transversais
+                                </h3>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-git text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Trabalho em Equipa e Colaboração</h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Coordenação de
+                                                        tarefas entre diferentes perfis (Tais, Anthony, Claudia)
+                                                        utilizando controle de versão (Git/Branches).</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-chat-dots-fill text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Comunicação com o Cliente</h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Realização de
+                                                        reuniões de levantamento de requisitos e sessões de aprovação
+                                                        para validar o progresso do design e do código.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                            style="background: var(--surface-dark); border-radius: 4px;">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <i class="bi bi-tools text-primary-custom me-3"
+                                                    style="font-size: 1.5rem;"></i>
+                                                <div>
+                                                    <h4 class="h4 text-white mb-2">Resolução de Problemas Técnicos</h4>
+                                                    <p class="text-dim mb-0"
+                                                        style="font-size: 1.2rem; line-height: 1.6;">Implementação de
+                                                        funcionalidades específicas como paginação de clientes,
+                                                        integração de domínios e rotas de fallback.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Melhorias Futuras -->
+
+                <div id="content-future" class="animate-tab flex-grow-1 d-flex flex-column hidden-tab">
+                    <div class="mb-2">
+                        <h2 class="display-5 fw-bold mb-2 text-white">Melhorias Futuras</h2>
+                        <p class="fs-5 text-dim fw-light">O roadmap e as próximas etapas da evolução</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <div class="position-relative my-auto">
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                    style="background: var(--surface-dark); border-radius: 4px;">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-calendar-check text-primary-custom me-3"
+                                            style="font-size: 1.5rem;"></i>
+                                        <div>
+                                            <h4 class="h4 text-white mb-3">Agenda Individualizada</h4>
+                                            <p class="text-dim mb-0" style="font-size: 1.2rem; line-height: 1.6;">Filtro
+                                                automático no Dashboard para que o profissional visualize apenas os seus
+                                                agendamentos.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                    style="background: var(--surface-dark); border-radius: 4px;">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-clock-history text-primary-custom me-3"
+                                            style="font-size: 1.5rem;"></i>
+                                        <div>
+                                            <h4 class="h4 text-white mb-3">Gestão de Disponibilidade</h4>
+                                            <p class="text-dim mb-0" style="font-size: 1.2rem; line-height: 1.6;">
+                                                Interface
+                                                para
+                                                o profissional definir horários de pausa, férias ou bloqueios na agenda.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                    style="background: var(--surface-dark); border-radius: 4px;">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-briefcase text-primary-custom me-3"
+                                            style="font-size: 1.5rem;"></i>
+                                        <div>
+                                            <h4 class="h4 text-white mb-3">Portfólio de Procedimentos</h4>
+                                            <p class="text-dim mb-0" style="font-size: 1.2rem; line-height: 1.6;">
+                                                Vinculação
+                                                de
+                                                quais tratamentos (ex: Limpeza de Pele, Massagem Modeladora, etc.) cada
+                                                profissional está
+                                                habilitado
+                                                a realizar.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-4 border border-secondary border-opacity-10 h-100"
+                                    style="background: var(--surface-dark); border-radius: 4px;">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-graph-up-arrow text-primary-custom me-3"
+                                            style="font-size: 1.5rem;"></i>
+                                        <div>
+                                            <h4 class="h4 text-white mb-3">Estatísticas de Atendimento</h4>
+                                            <p class="text-dim mb-0" style="font-size: 1.2rem; line-height: 1.6;">
+                                                Visualização
+                                                de métricas pessoais, como número de clientes atendidos e taxa de
+                                                retorno.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PERGUNTAS  -->
+                <div id="content-perguntas" class="animate-tab flex-grow-1 d-flex flex-column hidden-tab">
+                    <div class="mb-2">
+                        <h2 class="display-5 fw-bold mb-2 text-white">Perguntas</h2>
+                        <p class="fs-5 text-dim fw-light">Prometemos que respondemos a (quase) tudo! 😂</p>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <div class="flex-grow-1 d-flex align-items-center justify-content-center position-relative">
+                        <div class="text-center">
+                            <!-- <i class="bi bi-question-circle"
+                                style="font-size: 15rem; color: var(--primary-color); opacity: 0.1;"></i> -->
+                            <div class="position-absolute top-40 start-50 translate-middle w-100" style="top: 40%;">
+                                <h1 class="display-2 fw-bold text-white mb-0 animate-tab"
+                                    style="letter-spacing: -0.02em;">
+                                    Agora é com vocês 🫵
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Scripts -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                function switchTab(tabId) {
+                    const tabs = ['start', 'home', 'work', 'about', 'contact', 'challenges', 'learning', 'future', 'perguntas'];
+                    tabs.forEach(id => {
+                        const content = document.getElementById('content-' + id);
+                        const link = document.getElementById('link-' + id);
+                        const dot = document.getElementById('dot-' + id);
+
+                        if (content) {
+                            if (id === tabId) {
+                                content.classList.remove('hidden-tab');
+                                content.classList.add('animate-tab');
+                            }
+                            else {
+                                content.classList.add('hidden-tab');
+                                content.classList.remove('animate-tab');
+                            }
+                        }
+
+                        if (link) {
+                            if (id === tabId) link.classList.add('active');
+                            else link.classList.remove('active');
+                        }
+
+                        if (dot) {
+                            if (id === tabId) dot.classList.remove('d-none');
+                            else dot.classList.add('d-none');
+                        }
+                    });
+                }
+
+                function switchMethodology(index) {
+                    const headers = document.querySelectorAll('.timeline-header');
+                    const columns = document.querySelectorAll('.timeline-column');
+
+                    headers.forEach((h, i) => {
+                        if (i === index) h.classList.add('active');
+                        else h.classList.remove('active');
+                    });
+
+                    columns.forEach((c, i) => {
+                        if (i === index) c.classList.add('active');
+                        else c.classList.remove('active');
+                    });
+                }
+
+                // Horizontal Scroll Helper
+                function setupScroll(scrollId, leftBtnId, rightBtnId) {
+                    const container = document.getElementById(scrollId);
+                    const leftArrow = document.getElementById(leftBtnId);
+                    const rightArrow = document.getElementById(rightBtnId);
+
+                    if (container && leftArrow && rightArrow) {
+                        const checkScroll = () => {
+                            if (container.scrollLeft <= 50) leftArrow.classList.add('d-none');
+                            else leftArrow.classList.remove('d-none');
+
+                            if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 50) rightArrow.classList.add('d-none');
+                            else rightArrow.classList.remove('d-none');
+                        };
+
+                        container.addEventListener('scroll', checkScroll);
+                        window.addEventListener('resize', checkScroll);
+                        checkScroll();
+                        setTimeout(checkScroll, 1000);
+                    }
+                }
+
+                function openImageModal(src) {
+                    const modalImg = document.getElementById('modalImage');
+                    if (modalImg) {
+                        modalImg.src = src;
+                        const myModal = new bootstrap.Modal(document.getElementById('imageLightboxModal'));
+                        myModal.show();
+                    }
+                }
+
+                document.addEventListener('DOMContentLoaded', () => {
+                    setupScroll('horizontal-scroll', 'scroll-left-btn', 'scroll-right-btn');
+                    setupScroll('method-scroll', 'method-scroll-left-btn', 'method-scroll-right-btn');
+                    setupScroll('learning-scroll', 'learning-scroll-left-btn', 'learning-scroll-right-btn');
+                    setupScroll('app-scroll', 'app-scroll-left-btn', 'app-scroll-right-btn');
+                });
+            </script>
+        </main>
+    </div>
+
+    <!-- Ticket Offcanvas -->
+    <div class="offcanvas offcanvas-end offcanvas-custom" tabindex="-1" id="offcanvasTicket"
+        aria-labelledby="offcanvasTicketLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title fw-bold" id="offcanvasTicketLabel">
+                <i class="bi bi-gift text-primary-custom me-2"></i>
+                Oferta Especial
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div class="mb-5 text-center">
+                <h3 class="h2 fw-bold text-white mb-3">O Seu Voucher</h3>
+                <p class="text-dim fs-5"><strong>Parceria Especial</strong>: Equipa Vértice e Templo de Gaya Aveiro. Use
+                    o seu voucher para ganhar <strong>10€</strong> de desconto em qualquer tratamento.</p>
+            </div>
+
+            <div class="ticket-container text-center">
+                <img src="/images/qr-code.png" alt="Voucher 10€" class="ticket-img">
+            </div>
+
+            <div class="mt-5 pt-4 text-center border-top border-secondary border-opacity-10 w-100">
+                <p class="small text-dim mb-0 italic">Válido até 31 de Março de 2026</p>
+            </div>
+        </div>
+    </div>
+    <!-- Image Lightbox Modal -->
+    <div class="modal fade" id="imageLightboxModal" tabindex="-1" aria-hidden="true">
+        <button type="button" class="btn-close-custom border-0" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bi bi-x-lg" style="font-size: 1.5rem;"></i>
+        </button>
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-body p-0">
+                    <img src="" id="modalImage" class="img-fluid rounded-4 shadow-lg w-100" alt="Vista ampliada">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
