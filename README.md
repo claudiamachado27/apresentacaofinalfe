@@ -1,8 +1,12 @@
-# Projeto Equipa Vértice - Sistema de Gestão Clínica de Estética
+# Apresentação do Projeto Equipa Vértice - Sistema de Gestão Clínica de Estética
 
 <p align="center">
   <img src="/images/logovertice.png" alt="Logo Vértice" width="200">
 </p>
+<p align="center">
+  [![Apresentação](https://img.shields.io/badge/Acessar-Apresentação-brightgreen)](https://claudiamachado27.github.io/apresentacaofinalfe/)
+</p>
+
 
 ## 📋 Sobre o Projeto
 
