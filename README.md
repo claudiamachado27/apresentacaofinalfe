@@ -4,8 +4,10 @@
   <img src="/images/logovertice.png" alt="Logo Vértice" width="200">
 </p>
 <p align="center">
-  [![Apresentação](https://img.shields.io/badge/Acessar-Apresentação-brightgreen)](https://claudiamachado27.github.io/apresentacaofinalfe/)
-</p>
+  <a href="https://claudiamachado27.github.io/apresentacaofinalfe/">
+    <img src="https://img.shields.io/badge/Acessar-Apresentação-brightgreen" alt="Apresentação">
+  </a>
+</p>>
 
 
 ## 📋 Sobre o Projeto
